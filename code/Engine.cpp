@@ -8,13 +8,13 @@
 using namespace std;
 using namespace sf;
 
-    Engine::Engine() 
+    Engine::Engine() //Gets the current Desktop Resolution and creates a full screen window titled "Particles"
     {
         VideoMode desktopMode = VideoMode::getDesktopMode();
         m_Window.create(desktopMode, "Particles");
     }
 
-    void Engine::run() 
+    void Engine::run() //Main loop
     {
         Clock theClock;
 
@@ -34,7 +34,7 @@ using namespace sf;
         }
     }
 
-    void Engine::input() 
+    void Engine::input() //Checks user input
     {
         Event event;
         while (m_Window.pollEvent(event))
@@ -59,7 +59,7 @@ using namespace sf;
         }
     }
 
-    void Engine::update(float dtAsSeconds) 
+    void Engine::update(float dtAsSeconds) //Update Logic
     {
         for (auto iterator = m_particles.begin(); iterator != m_particles.end(); ) {
             if (iterator->getTTL() > 0.0) {
@@ -71,7 +71,7 @@ using namespace sf;
         }
     }
 
-    void Engine::draw() 
+    void Engine::draw()  //Clears the window and draws active particles
     {
         m_Window.clear();
 
