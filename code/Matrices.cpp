@@ -1,9 +1,7 @@
 #include "Matrices.h"
-
-
 namespace Matrices
 {
-    TranslationMatrix::TranslationMatrix(double xShift, double yShift, int nCols)
+    TranslationMatrix::TranslationMatrix(double xShift, double yShift, int nCols) //builds intial matrix
     : Matrix(2, nCols)
   {
         for (int j = 0; j < nCols; ++j)
@@ -17,7 +15,7 @@ namespace Matrices
         }
     }
 
-    RotationMatrix::RotationMatrix(double theta) : Matrix(2, 2)
+    RotationMatrix::RotationMatrix(double theta) : Matrix(2, 2) //logic for the rotation of particles
     {
         a[0][0] = cos(theta);
         a[0][1] = -sin(theta);
@@ -25,7 +23,7 @@ namespace Matrices
         a[1][1] = cos(theta);
     }
 
-    ScalingMatrix::ScalingMatrix(double scale) : Matrix(2, 2)
+    ScalingMatrix::ScalingMatrix(double scale) : Matrix(2, 2) //logic for the scaling 
     {
         a[0][0] = scale;
         a[0][1] = 0;
@@ -51,7 +49,7 @@ namespace Matrices
 
     Matrix operator+(const Matrix& a, const Matrix& b)
     {
-        if (a.getRows() != b.getRows() || a.getCols() != b.getCols())
+        if (a.getRows() != b.getRows() || a.getCols() != b.getCols()) //checks if dimensions agree
         {
             throw runtime_error("Error: dimensions must agree");
         }
@@ -60,7 +58,7 @@ namespace Matrices
         Matrix result(a.getRows(), a.getCols());
 
 
-        for (int i = 0; i < a.getRows(); ++i)
+        for (int i = 0; i < a.getRows(); ++i) //adds matricies together
         {
             for (int j = 0; j < a.getCols(); ++j)
             {
@@ -73,18 +71,18 @@ namespace Matrices
     }
 
 
-    Matrix operator*(const Matrix& a, const Matrix& b)
+    Matrix operator*(const Matrix& a, const Matrix& b) //multiplys each matrix
     {
         if (a.getCols() != b.getRows())
         {
-            throw runtime_error("Error: dimensions must agree");
+            throw runtime_error("Error: dimensions must agree"); //checks if agrees
         }
 
 
         Matrix result(a.getRows(), b.getCols());
 
 
-        for (int i = 0; i < a.getRows(); ++i)
+        for (int i = 0; i < a.getRows(); ++i)    //performs matric multplication
         {
             for (int k = 0; k < b.getCols(); ++k)
             {
@@ -102,7 +100,7 @@ namespace Matrices
     }
 
 
-    bool operator==(const Matrix& a, const Matrix& b)
+    bool operator==(const Matrix& a, const Matrix& b)//checks if elemnt are close in size
     {
         if (a.getRows() != b.getRows() || a.getCols() != b.getCols())
         {
@@ -112,7 +110,7 @@ namespace Matrices
 
         for (int i = 0; i < a.getRows(); ++i)
         {
-            for (int j = 0; j < a.getCols(); ++j)
+            for (int j = 0; j < a.getCols(); ++j) //loops through
             {
                 // Compare elements within 0.001
                 if (abs(a(i, j) - b(i, j)) >= 0.001)
@@ -123,17 +121,17 @@ namespace Matrices
         }
 
 
-        return true;
+        return true; //boolean statement
     }
 
 
-    bool operator!=(const Matrix& a, const Matrix& b)
+    bool operator!=(const Matrix& a, const Matrix& b) //returns true if it does not equal
     {
         return !(a == b);
     }
 
 
-    ostream& operator<<(ostream& os, const Matrix& a)
+    ostream& operator<<(ostream& os, const Matrix& a) //prints the matrix
     {
         for (int i = 0; i < a.getRows(); ++i)
         {
