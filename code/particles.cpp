@@ -5,6 +5,7 @@
 
 using namespace sf;
 
+//Constructor responsible for generating a randomized shape
     Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition) : m_A(2, numPoints)
     {
         m_ttl = TTL;
@@ -14,21 +15,21 @@ using namespace sf;
         m_cartesianPlane.setSize(target.getSize().x, (-1.0) * target.getSize().y);
         m_centerCoordinate = target.mapPixelToCoords(mouseClickPosition, m_cartesianPlane);
 
-        m_vx = (rand() % 401) + 100; 
-        m_vy = (rand() % 401) + 100;
+        m_vx = (rand() % 401) + 100; //particle effects
+        m_vy = (rand() % 401) + 100; 
 
-        m_color1.r = 255;
+        m_color1.r = 255; //color
         m_color1.g = 255;
         m_color1.b = 255;
 
-        m_color2.r = rand() % 256;
+        m_color2.r = rand() % 256; //randomo color
         m_color2.g = rand() % 256;
         m_color2.b = rand() % 256;
 
-        float theta = static_cast<float>(rand()) / RAND_MAX * (M_PI / 2);
+        float theta = static_cast<float>(rand()) / RAND_MAX * (M_PI / 2); //starting orientation 
         float dTheta = 2 * M_PI / (numPoints - 1);
 
-        for (int j = 0; j < numPoints; j++)
+        for (int j = 0; j < numPoints; j++) //creates shape
         {
         int r = rand() % 20 + 60;
         float dx;
@@ -43,36 +44,36 @@ using namespace sf;
         theta += dTheta;
         }
     }
-    void Particle::draw(RenderTarget& target, RenderStates states) const 
+    void Particle::draw(RenderTarget& target, RenderStates states) const //draws shape
     {
-        VertexArray lines(TriangleFan, m_numPoints + 1);
+        VertexArray lines(TriangleFan, m_numPoints + 1); //creates shape from previous calcualtioms
         Vector2f center = Vector2f(target.mapCoordsToPixel(m_centerCoordinate, m_cartesianPlane));
-        lines[0].position = center;
+        lines[0].position = center;    //locates middle point and colors it
         lines[0].color = m_color1;
-        for (int j = 1; j <= m_numPoints; j++)
+        for (int j = 1; j <= m_numPoints; j++) //colors outer points around middle
         {
             Vector2f v(m_A(0, j - 1), m_A(1, j - 1));
             lines[j].position = Vector2f(target.mapCoordsToPixel(v, m_cartesianPlane));
             lines[j].color = m_color2;
         }
 
-        target.draw(lines);
+        target.draw(lines); //draws shape
     }
     
-    void Particle::update(float dt)
+    void Particle::update(float dt) //animates particles
     {
-        m_ttl -= dt;
-        rotate(dt * m_radiansPerSec);
-        scale(SCALE);
+        m_ttl -= dt; //particle life
+        rotate(dt * m_radiansPerSec); //spins the shape
+        scale(SCALE); //shrinks shape
 
         float dx, dy;
-        dx = m_vx * dt;
+        dx = m_vx * dt;//move particle
         m_vy -= G * dt;
         dy = m_vy * dt;
         translate(dx, dy);
     }
 
-    void Particle::translate(double xShift, double yShift)
+    void Particle::translate(double xShift, double yShift) //movement animation 
     {
         TranslationMatrix T(xShift, yShift, m_A.getCols());
         m_A = T + m_A;
@@ -80,7 +81,7 @@ using namespace sf;
         m_centerCoordinate.y += yShift;
     }
 
-    void Particle::rotate(double theta)
+    void Particle::rotate(double theta) //rotates particle around the center
     {
         Vector2f temp = m_centerCoordinate;
         translate(-m_centerCoordinate.x, -m_centerCoordinate.y);
@@ -93,7 +94,7 @@ using namespace sf;
 
     }
 
-    void Particle::scale(double c)
+    void Particle::scale(double c) //controls shrinkage based on the factor of C
     {
         Vector2f temp = m_centerCoordinate;
         translate(-m_centerCoordinate.x, -m_centerCoordinate.y);
@@ -104,7 +105,7 @@ using namespace sf;
         translate(temp.x, temp.y);
     }
 
-    bool Particle::almostEqual(double a, double b, double eps)
+    bool Particle::almostEqual(double a, double b, double eps) //Checks if numbers are close to each other
     {
         return fabs(a - b) < eps;
     }
